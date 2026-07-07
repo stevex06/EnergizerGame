@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Oracle Quiz Adventure</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#222;
+    text-align:center;
+}
+
+
+#menu{
+
+    color:white;
+    margin-top:100px;
+
+}
+
+
+
+button{
+
+    padding:15px 30px;
+    font-size:18px;
+    cursor:pointer;
+
+}
+
+
+
+#game{
+
+    display:none;
+
+}
+
+
+
+#info{
+
+    color:white;
+    font-size:22px;
+    padding:10px;
+
+}
+
+
+
+
+#map{
+
+    width:900px;
+    height:500px;
+
+
+    background-image:url("map1.png");
+    background-size:cover;
+    background-position:center;
+
+
+    margin:auto;
+
+    position:relative;
+
+    overflow:hidden;
+
+    border:5px solid black;
+
+
+}
+
+
+
+
+
+#player{
+
+
+    width:90px;
+    height:90px;
+
+
+    position:absolute;
+
+
+    left:120px;
+    top:400px;
+
+
+
+    background-image:url("PIC1.png");
+
+    background-size:cover;
+
+    background-position:center;
+
+    background-repeat:no-repeat;
+
+
+}
+
+
+
+
+
+
+.coin{
+
+
+    width:40px;
+    height:40px;
+
+
+    position:absolute;
+
+
+
+    background-image:url("tam.png");
+
+    background-size:cover;
+
+    background-position:center;
+
+
+}
+
+
+
+
+
+.obstacle{
+
+
+    width:60px;
+    height:60px;
+
+
+    position:absolute;
+
+
+
+    background-image:url("ENEM.png");
+
+    background-size:cover;
+
+    background-position:center;
+
+
+}
+
+
+
+
+
+
+#questionBox{
+
+
+    display:none;
+
+
+    position:absolute;
+
+
+    width:350px;
+
+
+    left:270px;
+
+    top:80px;
+
+
+    background:white;
+
+
+    padding:20px;
+
+
+    border:3px solid black;
+
+
+    z-index:10;
+
+
+}
+
+
+
+
+
+
+.answer{
+
+    display:block;
+
+    width:100%;
+
+    margin:5px;
+
+
+}
+
+
+
+
+
+
+#result{
+
+
+    display:none;
+
+
+    color:white;
+
+
+    font-size:30px;
+
+
+    margin-top:100px;
+
+
+}
+
+
+</style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+<div id="menu">
+
+
+<h1>🗄️ Oracle Quiz Adventure</h1>
+
+
+<p>
+
+Collect coins and learn Oracle Database!
+
+</p>
+
+
+<button onclick="startGame()">
+
+START GAME
+
+</button>
+
+
+</div>
+
+
+
+
+
+<div id="game">
+
+
+
+<div id="info">
+
+Score:
+
+<span id="score">0</span>
+
+</div>
+
+
+
+
+<div id="map">
+
+
+
+<div id="player"></div>
+
+
+
+
+
+<!-- COINS -->
+
+
+
+<div class="coin" style="left:300px;top:250px"></div>
+
+<div class="coin" style="left:480px;top:120px"></div>
+
+<div class="coin" style="left:650px;top:330px"></div>
+<div class="coin" style="left:520px;top:110px"></div>
+
+<div class="coin" style="left:800px;top:170px"></div>
+
+
+
+
+
+<!-- OBSTACLES -->
+
+
+<div class="obstacle" style="left:200px;top:350px"></div>
+
+<div class="obstacle" style="left:270px;top:180px"></div>
+
+<div class="obstacle" style="left:350px;top:420px"></div>
+
+<div class="obstacle" style="left:430px;top:300px"></div>
+
+<div class="obstacle" style="left:520px;top:180px"></div>
+
+<div class="obstacle" style="left:600px;top:260px"></div>
+
+<div class="obstacle" style="left:680px;top:420px"></div>
+
+<div class="obstacle" style="left:760px;top:300px"></div>
+
+
+
+
+<div class="obstacle" style="left:720px;top:120px"></div>
+
+<div class="obstacle" style="left:300px;top:400px"></div>
+
+<div class="obstacle" style="left:500px;top:330px"></div>
+
+
+
+
+
+<div id="questionBox">
+
+
+<h3 id="question"></h3>
+
+
+<button class="answer" onclick="answer('A')"></button>
+
+<button class="answer" onclick="answer('B')"></button>
+
+<button class="answer" onclick="answer('C')"></button>
+
+<button class="answer" onclick="answer('D')"></button>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+<div id="result">
+
+<h1>🏆 RESULT</h1>
+
+<h2 id="finalScore"></h2>
+
+
+<button onclick="location.reload()">
+
+PLAY AGAIN
+
+</button>
+
+
+</div>
+
+
+
+<script>
+
+// =========================
+// VARIABLES
+// =========================
+
+
+let player = document.getElementById("player");
+
+
+let score = 0;
+
+
+let collectedCoins = 0;
+
+
+
+let x = 120;
+
+let y = 400;
+
+
+
+let currentQuestion;
+
+
+
+let coins = document.querySelectorAll(".coin");
+
+
+
+
+
+
+// =========================
+// ORACLE QUESTIONS
+// =========================
+
+
+
+let questions = [
+
+
+
+{
+q:"What is Oracle Database?",
+
+correct:"A",
+
+choices:[
+
+"Database Management System",
+
+"Programming Language",
+
+"Web Browser",
+
+"Operating System"
+
+]
+
+},
+
+
+
+
+{
+q:"What language is commonly used in Oracle Database?",
+
+correct:"A",
+
+choices:[
+
+"SQL",
+
+"HTML",
+
+"CSS",
+
+"Python"
+
+]
+
+},
+
+
+
+
+{
+q:"Which SQL command is used to display data?",
+
+correct:"A",
+
+choices:[
+
+"SELECT",
+
+"DELETE",
+
+"DROP",
+
+"REMOVE"
+
+]
+
+},
+
+
+
+
+{
+q:"Which SQL command adds new data into a table?",
+
+correct:"A",
+
+choices:[
+
+"INSERT",
+
+"SELECT",
+
+"ALTER",
+
+"CREATE"
+
+]
+
+},
+
+
+
+
+{
+q:"Which SQL command removes data from a table?",
+
+correct:"A",
+
+choices:[
+
+"DELETE",
+
+"SELECT",
+
+"INSERT",
+
+"UPDATE"
+
+]
+
+}
+
+
+
+];
+
+
+
+
+
+
+
+// =========================
+// START GAME
+// =========================
+
+
+
+function startGame(){
+
+
+document.getElementById("menu").style.display="none";
+
+
+document.getElementById("game").style.display="block";
+
+
+
+}
+
+
+
+
+
+
+
+// =========================
+// PLAYER MOVEMENT
+// =========================
+
+
+
+document.addEventListener("keydown",function(e){
+
+
+
+let speed = 10;
+
+
+
+if(e.key=="ArrowRight"){
+
+x += speed;
+
+}
+
+
+
+if(e.key=="ArrowLeft"){
+
+x -= speed;
+
+}
+
+
+
+if(e.key=="ArrowUp"){
+
+y -= speed;
+
+}
+
+
+
+if(e.key=="ArrowDown"){
+
+y += speed;
+
+}
+
+
+
+
+
+
+// MAP LIMITS
+
+
+
+if(x<0){
+
+x=0;
+
+}
+
+
+
+if(y<0){
+
+y=0;
+
+}
+
+
+
+if(x>830){
+
+x=830;
+
+}
+
+
+
+if(y>430){
+
+y=430;
+
+}
+
+
+
+
+
+
+player.style.left = x+"px";
+
+
+player.style.top = y+"px";
+
+
+
+
+checkCollision();
+
+
+
+
+});
+
+// =========================
+// COLLISION CHECK
+// =========================
+
+
+function checkCollision(){
+
+
+
+let p = player.getBoundingClientRect();
+
+
+
+
+// CHECK COINS
+
+
+coins.forEach(function(c){
+
+
+
+if(c.style.display!="none"){
+
+
+
+let coin = c.getBoundingClientRect();
+
+
+
+
+if(hit(p,coin)){
+
+
+
+c.style.display="none";
+
+
+
+showQuestion();
+
+
+
+}
+
+
+
+}
+
+
+
+});
+
+
+
+
+
+
+// CHECK OBSTACLES
+
+
+let obstacles = document.querySelectorAll(".obstacle");
+
+
+
+obstacles.forEach(function(o){
+
+
+
+let obstacle = o.getBoundingClientRect();
+
+
+
+
+if(hit(p,obstacle)){
+
+
+
+alert("💥 You hit an obstacle! Back to start!");
+
+
+
+x=120;
+
+y=400;
+
+
+
+player.style.left=x+"px";
+
+player.style.top=y+"px";
+
+
+
+}
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+// =========================
+// COLLISION FUNCTION
+// =========================
+
+
+
+function hit(a,b){
+
+let padding = 20;
+
+return !(
+
+a.right - padding < b.left ||
+
+a.left + padding > b.right ||
+
+a.bottom - padding < b.top ||
+
+a.top + padding > b.bottom
+
+);
+
+}
+
+
+
+
+
+
+
+
+// =========================
+// SHOW QUESTION
+// =========================
+
+
+
+function showQuestion(){
+
+
+
+currentQuestion = questions[collectedCoins];
+
+
+
+
+document.getElementById("question").innerHTML = currentQuestion.q;
+
+
+
+
+
+let buttons = document.querySelectorAll(".answer");
+
+
+
+buttons[0].innerHTML =
+"A. " + currentQuestion.choices[0];
+
+
+buttons[1].innerHTML =
+"B. " + currentQuestion.choices[1];
+
+
+buttons[2].innerHTML =
+"C. " + currentQuestion.choices[2];
+
+
+buttons[3].innerHTML =
+"D. " + currentQuestion.choices[3];
+
+
+
+
+
+document.getElementById("questionBox").style.display="block";
+
+
+
+}
+
+
+
+
+
+
+
+// =========================
+// ANSWER CHECK
+// =========================
+
+
+
+function answer(choice){
+
+
+
+let box=document.getElementById("questionBox");
+
+
+
+
+
+if(choice == currentQuestion.correct){
+
+
+
+score += 10;
+
+
+
+alert("✅ Correct! +10 Points");
+
+
+
+}
+
+else{
+
+
+
+alert("❌ Wrong Answer");
+
+
+
+}
+
+
+
+
+
+collectedCoins++;
+
+
+
+
+
+document.getElementById("score").innerHTML = score;
+
+
+
+
+box.style.display="none";
+
+
+
+
+
+
+// CHECK IF ALL COINS ARE COLLECTED
+
+
+if(collectedCoins == 5){
+
+
+
+showResult();
+
+
+
+}
+
+
+
+}
+
+// =========================
+// RESULT
+// =========================
+
+
+function showResult(){
+
+
+
+document.getElementById("game").style.display="none";
+
+
+
+document.getElementById("result").style.display="block";
+
+
+
+
+let status;
+
+
+
+// 75% PASSING RATE
+// 50 total points
+// 40 points pataas = PASS
+
+
+if(score >= 40){
+
+
+status="🎉 PASS!";
+
+
+}
+
+else{
+
+
+status="❌ FAILED";
+
+
+}
+
+
+
+
+
+
+document.getElementById("finalScore").innerHTML =
+
+"Your Score: " + score + "/50<br><br>" + status;
+
+
+
+
+}
+
+
+
+
+
+
+</script>
+
+
+</body>
+
+
+</html>
