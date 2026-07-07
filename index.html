@@ -579,42 +579,31 @@ document.getElementById("game").style.display="block";
 document.addEventListener("keydown",function(e){
 
 
-
 let speed = 10;
 
 
 
-if(e.key=="ArrowRight"){
-
-x += speed;
-
+if(e.key=="d" || e.key=="D"){
+    x += speed;
 }
 
 
 
-if(e.key=="ArrowLeft"){
-
-x -= speed;
-
+if(e.key=="a" || e.key=="A"){
+    x -= speed;
 }
 
 
 
-if(e.key=="ArrowUp"){
-
-y -= speed;
-
+if(e.key=="w" || e.key=="W"){
+    y -= speed;
 }
 
 
 
-if(e.key=="ArrowDown"){
-
-y += speed;
-
+if(e.key=="s" || e.key=="S"){
+    y += speed;
 }
-
-
 
 
 
